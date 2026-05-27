@@ -1,0 +1,207 @@
+'use strict';
+
+const SUPABASE_URL = 'https://ehjfkrabnbgbfiaqlwfd.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVoamZrcmFibmJnYmZpYXFsd2ZkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU1NzcxMTksImV4cCI6MjA5MTE1MzExOX0.4qC2R9UyauOLhqfuMos8JX2nR02KDYJXumOEoazDa1k';
+
+// ============ INIT ============
+
+let db;
+let currentUser = null;
+let userProfile = null;
+let partnerProfile = null;
+let myAnim = null;
+let partnerAnim = null;
+let myUpdatedAt = null;
+let partnerUpdatedAt = null;
+
+const $ = id => document.getElementById(id);
+
+const STATUS = [
+  { id: 'free', label: 'Free', file: 'free.json' },
+  { id: 'teaching', label: 'Teaching', file: 'teaching.json' },
+  { id: 'busy', label: 'Busy', file: 'busy.json' },
+  { id: 'eating', label: 'Eating', file: 'eating.json' },
+  { id: 'tired', label: 'Tired', file: 'tired.json' },
+  { id: 'studying', label: 'Studying', file: 'studying.json' },
+  { id: 'sleeping', label: 'Sleeping', file: 'sleeping.json' },
+  { id: 'working', label: 'Working', file: 'working.json' }
+];
+
+const QUOTES = [
+  'No sugar needed when I have CHO.',
+  'Two souls, one heartbeat.',
+  'Miles apart, but always close at heart.',
+  'Just thinking about you... again.',
+  'CHO, you are as sweet as ever.'
+];
+
+// ============ DOM READY ============
+
+document.addEventListener('DOMContentLoaded', () => {
+  if (typeof supabase !== 'undefined') {
+    db = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+  } else {
+    console.error('Supabase not loaded');
+    return;
+  }
+
+  checkSession();
+  setupAuthListeners();
+});
+
+// ============ SESSION CHECK ============
+
+async function checkSession() {
+  const { data: { session } } = await db.auth.getSession();
+  
+  if (session) {
+    currentUser = session.user;
+    await loadProfile();
+  }
+}
+
+async function loadProfile() {
+  const { data } = await db
+    .from('profiles')
+    .select('*')
+    .eq('id', currentUser.id)
+    .single();
+
+  if (data) {
+    userProfile = data;
+    checkPairing();
+  }
+}
+
+// ============ AUTH LISTENERS ============
+
+function setupAuthListeners() {
+  // Login Form
+  $('loginForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    const email = $('loginEmail').value.trim();
+    const password = $('loginPassword').value;
+
+    const { data, error } = await db.auth.signInWithPassword({ email, password });
+
+    if (error) {
+      showAuthError('login', error.message);
+    } else {
+      currentUser = data.user;
+      await loadProfile();
+    }
+  });
+
+  // Register Form
+  $('registerForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    const name = $('regName').value.trim();
+    const email = $('regEmail').value.trim();
+    const password = $('regPassword').value;
+    
+    const selectedGender = document.querySelector('.gender-card.selected');
+    const selectedAvatar = document.querySelector('.avatar-card.selected');
+    
+    if (!selectedGender) {
+      showAuthError('register', 'Please select gender');
+      return;
+    }
+    if (!selectedAvatar) {
+      showAuthError('register', 'Please select an avatar');
+      return;
+    }
+
+    const gender = selectedGender.dataset.gender;
+    const avatar = selectedAvatar.dataset.avatar;
+
+    // Sign Up
+    const { data, error } = await db.auth.signUp({ email, password });
+
+    if (error) {
+      showAuthError('register', error.message);
+      return;
+    }
+
+    currentUser = data.user;
+
+    // Save Profile
+    const { error: profileError } = await db
+      .from('profiles')
+      .insert({
+        id: currentUser.id,
+        display_name: name,
+        gender: gender,
+        avatar: avatar
+      });
+
+    if (profileError) {
+      showAuthError('register', profileError.message);
+    } else {
+      userProfile = { id: currentUser.id, display_name: name, gender, avatar };
+      checkPairing();
+    }
+  });
+
+  // Toggle Login/Register
+  $('showRegister').addEventListener('click', () => {
+    $('loginPage').classList.add('hidden');
+    $('registerPage').classList.remove('hidden');
+  });
+
+  $('showLogin').addEventListener('click', () => {
+    $('registerPage').classList.add('hidden');
+    $('loginPage').classList.remove('hidden');
+  });
+
+  // Gender Select
+  document.querySelectorAll('.gender-card').forEach(card => {
+    card.addEventListener('click', () => {
+      document.querySelectorAll('.gender-card').forEach(c => c.classList.remove('selected'));
+      card.classList.add('selected');
+      updateAvatarGrid(card.dataset.gender);
+    });
+  });
+}
+
+// ============ AVATAR GRID ============
+
+function updateAvatarGrid(gender) {
+  const grid = $('avatarGrid');
+  grid.innerHTML = '';
+
+  const avatars = gender === 'boy' 
+    ? ['boy1.jpg', 'boy2.jpg']
+    : ['girl1.jpg', 'girl2.jpg'];
+
+  avatars.forEach(avatar => {
+    const card = document.createElement('div');
+    card.className = 'avatar-card';
+    card.dataset.avatar = avatar;
+    card.innerHTML = `<img src="${avatar}" alt="avatar" />`;
+
+    card.addEventListener('click', () => {
+      document.querySelectorAll('.avatar-card').forEach(c => c.classList.remove('selected'));
+      card.classList.add('selected');
+    });
+
+    grid.appendChild(card);
+  });
+}
+
+// ============ ERROR ============
+
+function showAuthError(type, message) {
+  const errorEl = type === 'login' ? $('loginError') : $('registerError');
+  errorEl.textContent = message;
+  errorEl.classList.remove('hidden');
+  setTimeout(() => errorEl.classList.add('hidden'), 4000);
+}
+
+// ============ PAIRING CHECK ============
+
+async function checkPairing() {
+  // နောက်မှ ရေးမယ်
+  console.log('User logged in:', userProfile);
+}
