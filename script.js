@@ -201,7 +201,45 @@ function showAuthError(type, message) {
 
 // ============ PAIRING CHECK ============
 
+// ============ PAIRING CHECK ============
+
 async function checkPairing() {
-  // နောက်မှ ရေးမယ်
-  console.log('User logged in:', userProfile);
+  // Check if user is already paired
+  const { data: pairData } = await db
+    .from('pairs')
+    .select('*')
+    .or(`user1_id.eq.${currentUser.id},user2_id.eq.${currentUser.id}`)
+    .single();
+
+  if (pairData) {
+    // Already paired  Go to Main App
+    const partnerId = pairData.user1_id === currentUser.id 
+      ? pairData.user2_id 
+      : pairData.user1_id;
+    
+    // Load partner profile
+    const { data: partner } = await db
+      .from('profiles')
+      .select('*')
+      .eq('id', partnerId)
+      .single();
+    
+    partnerProfile = partner;
+    
+    // Hide auth pages, show main app
+    $('loginPage').classList.add('hidden');
+    $('registerPage').classList.add('hidden');
+    $('pairingPage').classList.add('hidden');
+    $('mainApp').classList.remove('hidden');
+    
+    startApp();
+  } else {
+    // Not paired  Go to Pairing Screen
+    $('loginPage').classList.add('hidden');
+    $('registerPage').classList.add('hidden');
+    $('pairingPage').classList.remove('hidden');
+    $('mainApp').classList.add('hidden');
+    
+    setupPairingScreen();
+  }
 }
