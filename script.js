@@ -464,7 +464,7 @@ async function startApp() {
   subscribeRealtime();
   subscribeBuzz();
   subscribePairingRealtime();
-  setupSheet);
+  setupSheet();
   setupFlutter();
   startTyping();
   setInterval(updateTimes, 1000);
