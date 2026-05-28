@@ -311,9 +311,10 @@ async function generateInviteCode() {
   console.log('Existing:', existing, 'Error:', existError);
   
   if (existing) {
-    console.log('Found existing code:', existing.code);
-    $('myInviteCode').textContent = existing.code;
-    return;
+  console.log('Found existing code:', existing.code);
+  $('myInviteCode').textContent = existing.code;
+  console.log('UI updated to:', $('myInviteCode').textContent);  //  ဒါထည့်
+  return;
   }
   
   const code = 'DULCE-' + Math.random().toString(36).substring(2, 8).toUpperCase();
