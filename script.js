@@ -251,31 +251,41 @@ async function setupPairingScreen() {
   // Generate or get existing invite code
   await generateInviteCode();
   
-  // Share button
-
 
   // Copy button
 $('shareCodeBtn').addEventListener('click', () => {
   const code = $('myInviteCode').textContent;
   if (code === '----' || !code) return;
   
-  navigator.clipboard.writeText(code).then(() => {
-    showToast('Code copied! ');
-  }).catch(() => {
-    showPairingError('Failed to copy');
-  });
+  // Method 1: Clipboard API
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(code).then(() => {
+      showToast('Code copied! ');
+    }).catch(() => {
+      fallbackCopy(code);
+    });
+  } else {
+    fallbackCopy(code);
+  }
 });
-// toast
-  $('shareCodeBtn').addEventListener('click', () => {
-  const code = $('myInviteCode').textContent;
-  if (code === '----' || !code) return;
+
+function fallbackCopy(text) {
+  const textarea = document.createElement('textarea');
+  textarea.value = text;
+  textarea.style.position = 'fixed';
+  textarea.style.left = '-9999px';
+  document.body.appendChild(textarea);
+  textarea.select();
   
-  navigator.clipboard.writeText(code).then(() => {
+  try {
+    document.execCommand('copy');
     showToast('Code copied! ');
-  }).catch(() => {
+  } catch (e) {
     showPairingError('Failed to copy');
-  });
-});
+  }
+  
+  document.body.removeChild(textarea);
+}
   
   // Join button
   $('joinCodeBtn').addEventListener('click', async () => {
