@@ -395,10 +395,19 @@ async function joinWithCode(code) {
     return;
   }
   
-  await db
-    .from('invite_codes')
-    .update({ is_used: true, used_by: currentUser.id })
-    .eq('code', code);
+// Mark partner's code as used
+await db
+  .from('invite_codes')
+  .update({ is_used: true, used_by: currentUser.id })
+  .eq('code', code);
+
+//  ဒါထည့် - ကိုယ့်ရဲ့ code တွေကိုလည်း used လုပ်
+await db
+  .from('invite_codes')
+  .update({ is_used: true })
+  .eq('created_by', currentUser.id)
+  .eq('is_used', false);
+
   
   const { data: partner } = await db
     .from('profiles')
@@ -454,7 +463,8 @@ async function startApp() {
   await loadStates();
   subscribeRealtime();
   subscribeBuzz();
-  setupSheet();
+  subscribePairingRealtime();
+  setupSheet);
   setupFlutter();
   startTyping();
   setInterval(updateTimes, 1000);
@@ -594,6 +604,20 @@ function loadLottie(type, file) {
     partnerAnim = anim;
   }
 }
+//PARING REALTIME
+//================
+async function startApp() {
+  buildStatusList();
+  await loadStates();
+  subscribeRealtime();
+  subscribeBuzz();
+  subscribePairingRealtime();  //  ဒါထည့်
+  setupSheet();
+  setupFlutter();
+  startTyping();
+  setInterval(updateTimes, 1000);
+}
+
 
 // ==========================================
 //            REALTIME
