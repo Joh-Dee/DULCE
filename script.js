@@ -79,7 +79,7 @@ async function loadProfile() {
     .from('profiles')
     .select('*')
     .eq('id', currentUser.id)
-    .single();
+    .maybeSingle();
 
   if (data) {
     userProfile = data;
