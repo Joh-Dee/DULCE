@@ -101,6 +101,103 @@
   </div>
 </section>
 
+  <!-- ========== PAIRING PAGE ========== -->
+<section id="pairingPage" class="auth-page hidden">
+  <div class="auth-bg-orb"></div>
+  <div class="auth-bg-orb-secondary"></div>
+
+  <div class="auth-wrap">
+    <div class="auth-logo">
+      <div class="auth-logo-icon"></div>
+    </div>
+
+    <h1 class="auth-title">Connect</h1>
+    <p class="auth-subtitle">pair with your special someone</p>
+
+    <div class="pairing-section">
+      <label class="input-label">Your Invite Code</label>
+      <div class="invite-code-box">
+        <span id="myInviteCode">----</span>
+      </div>
+      <button id="shareCodeBtn" class="auth-btn secondary">Share Code</button>
+    </div>
+
+    <div class="pairing-divider">
+      <span>or</span>
+    </div>
+
+    <div class="pairing-section">
+      <label class="input-label">Partner's Code</label>
+      <div class="input-group">
+        <input type="text" id="partnerCode" placeholder="Enter code" maxlength="12" />
+      </div>
+      <button id="joinCodeBtn" class="auth-btn">Join Partner</button>
+    </div>
+
+    <div id="pairingError" class="auth-error hidden"></div>
+  </div>
+</section>
+
+<!-- ========== MAIN APP ========== -->
+<main id="mainApp" class="app hidden">
+  <section class="cards">
+    <div class="status-card mine">
+      <img id="myAvatar" class="avatar" src="boy1.jpg" alt="me" />
+      <div id="myLottie" class="lottie"></div>
+      <div id="myStatus" class="status-label">Free</div>
+      <div id="myTime" class="status-time">just now</div>
+    </div>
+
+    <div class="status-card partner">
+      <img id="partnerAvatar" class="avatar" src="girl1.jpg" alt="partner" />
+      <div id="partnerLottie" class="lottie"></div>
+      <div id="partnerStatus" class="status-label">Waiting...</div>
+      <div id="partnerTime" class="status-time">waiting...</div>
+    </div>
+  </section>
+
+  <section class="center-text-wrap">
+    <div id="typingText" class="typing-text"></div>
+  </section>
+
+  <section class="bottom-ui">
+    <button id="openSheetBtn" class="status-btn">
+      <span></span> Update Status
+    </button>
+  </section>
+
+  <div class="flutter-wrap">
+    <div class="flutter-label">hold to send a miss you</div>
+    <button id="flutterBtn" class="flutter-btn">
+      <svg class="progress-ring" width="130" height="130">
+        <circle class="ring-bg" cx="65" cy="65" r="56"></circle>
+        <circle id="ringFill" class="ring-fill" cx="65" cy="65" r="56"></circle>
+      </svg>
+      <div class="heart-core"></div>
+      <div class="flutter-glow"></div>
+    </button>
+  </div>
+</main>
+
+<!-- ========== OVERLAY ========== -->
+<div id="overlay" class="overlay"></div>
+
+<!-- ========== BOTTOM SHEET ========== -->
+<section id="sheet" class="sheet">
+  <div id="sheetHandle" class="sheet-handle"></div>
+  <div class="sheet-title">Choose Status</div>
+  <div id="statusList" class="status-list"></div>
+</section>
+
+<!-- ========== TOAST ========== -->
+<div id="toast" class="toast"></div>
+
+<!-- ========== BUZZ OVERLAY ========== -->
+<div id="buzzOverlay" class="buzz-overlay">
+  <div class="buzz-heart"></div>
+  <div class="buzz-ripple"></div>
+</div>
+
 <script src="supabase.min.js"></script>
 <script src="script.js"></script>
 </body>
