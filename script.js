@@ -403,9 +403,28 @@ async function joinWithCode(code) {
   startApp();
 }
 
+
 function showPairingError(message) {
   const el = $('pairingError');
+  if (!el) return;
+  
   el.textContent = message;
   el.classList.remove('hidden');
   setTimeout(() => el.classList.add('hidden'), 4000);
-    }
+}
+
+// ============ TOAST ============
+
+let toastTimer;
+
+function showToast(text) {
+  const toast = $('toast');
+  if (!toast) return;
+  
+  toast.textContent = text;
+  toast.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => {
+    toast.classList.remove('show');
+  }, 2500);
+}
