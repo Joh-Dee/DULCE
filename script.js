@@ -243,3 +243,141 @@ async function checkPairing() {
     setupPairingScreen();
   }
 }
+
+
+// ============ PAIRING SCREEN ============
+
+async function setupPairingScreen() {
+  // Generate or get existing invite code
+  await generateInviteCode();
+  
+  // Share button
+  $('shareCodeBtn').addEventListener('click', () => {
+    const code = $('myInviteCode').textContent;
+    if (navigator.share) {
+      navigator.share({
+        title: 'DULCE Invite Code',
+        text: `Connect with me on DULCE! My code is: ${code}`,
+        url: window.location.href
+      });
+    } else {
+      // Fallback - copy to clipboard
+      navigator.clipboard.writeText(code);
+      alert('Code copied: ' + code);
+    }
+  });
+  
+  // Join button
+  $('joinCodeBtn').addEventListener('click', async () => {
+    const code = $('partnerCode').value.trim().toUpperCase();
+    if (!code) {
+      showPairingError('Please enter a code');
+      return;
+    }
+    
+    await joinWithCode(code);
+  });
+}
+
+async function generateInviteCode() {
+  // Check if already has an unused code
+  const { data: existing } = await db
+    .from('invite_codes')
+    .select('*')
+    .eq('created_by', currentUser.id)
+    .eq('is_used', false)
+    .maybeSingle();
+  
+  if (existing) {
+    $('myInviteCode').textContent = existing.code;
+    return;
+  }
+  
+  // Generate new code
+  const code = 'DULCE-' + Math.random().toString(36).substring(2, 8).toUpperCase();
+  
+  const { error } = await db
+    .from('invite_codes')
+    .insert({
+      code: code,
+      created_by: currentUser.id
+    });
+  
+  if (!error) {
+    $('myInviteCode').textContent = code;
+  }
+}
+
+async function joinWithCode(code) {
+  // Find the code
+  const { data: codeData, error: codeError } = await db
+    .from('invite_codes')
+    .select('*')
+    .eq('code', code)
+    .eq('is_used', false)
+    .maybeSingle();
+  
+  if (codeError || !codeData) {
+    showPairingError('Invalid or expired code');
+    return;
+  }
+  
+  // Can't pair with yourself
+  if (codeData.created_by === currentUser.id) {
+    showPairingError('You cannot pair with yourself');
+    return;
+  }
+  
+  // Check if partner is already paired
+  const { data: partnerPair } = await db
+    .from('pairs')
+    .select('*')
+    .or(`user1_id.eq.${codeData.created_by},user2_id.eq.${codeData.created_by}`)
+    .maybeSingle();
+  
+  if (partnerPair) {
+    showPairingError('This person is already paired');
+    return;
+  }
+  
+  // Create pair
+  const { error: pairError } = await db
+    .from('pairs')
+    .insert({
+      user1_id: codeData.created_by,
+      user2_id: currentUser.id
+    });
+  
+  if (pairError) {
+    showPairingError('Failed to pair. Try again.');
+    return;
+  }
+  
+  // Mark code as used
+  await db
+    .from('invite_codes')
+    .update({ is_used: true, used_by: currentUser.id })
+    .eq('code', code);
+  
+  // Load partner profile
+  const { data: partner } = await db
+    .from('profiles')
+    .select('*')
+    .eq('id', codeData.created_by)
+    .single();
+  
+  partnerProfile = partner;
+  
+  // Go to Main App
+  $('pairingPage').classList.add('hidden');
+  $('mainApp').classList.remove('hidden');
+  
+  startApp();
+}
+
+function showPairingError(message) {
+  const el = $('pairingError');
+  el.textContent = message;
+  el.classList.remove('hidden');
+  setTimeout(() => el.classList.add('hidden'), 4000);
+    }
