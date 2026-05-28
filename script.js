@@ -248,45 +248,24 @@ async function checkPairing() {
 // ============ PAIRING SCREEN ============
 
 async function setupPairingScreen() {
-  // Generate or get existing invite code
   await generateInviteCode();
-  
 
   // Copy button
-$('shareCodeBtn').addEventListener('click', () => {
-  const code = $('myInviteCode').textContent;
-  if (code === '----' || !code) return;
-  
-  // Method 1: Clipboard API
-  if (navigator.clipboard && navigator.clipboard.writeText) {
-    navigator.clipboard.writeText(code).then(() => {
-      showToast('Code copied! ');
-    }).catch(() => {
-      fallbackCopy(code);
-    });
-  } else {
-    fallbackCopy(code);
-  }
-});
+  $('shareCodeBtn').addEventListener('click', () => {
+    const code = $('myInviteCode').textContent;
+    if (code === '----' || !code) return;
 
-function fallbackCopy(text) {
-  const textarea = document.createElement('textarea');
-  textarea.value = text;
-  textarea.style.position = 'fixed';
-  textarea.style.left = '-9999px';
-  document.body.appendChild(textarea);
-  textarea.select();
-  
-  try {
-    document.execCommand('copy');
-    showToast('Code copied! ');
-  } catch (e) {
-    showPairingError('Failed to copy');
-  }
-  
-  document.body.removeChild(textarea);
-}
-  
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(code).then(() => {
+        showToast('Code copied! ');
+      }).catch(() => {
+        fallbackCopy(code);
+      });
+    } else {
+      fallbackCopy(code);
+    }
+  });
+
   // Join button
   $('joinCodeBtn').addEventListener('click', async () => {
     const code = $('partnerCode').value.trim().toUpperCase();
@@ -294,10 +273,30 @@ function fallbackCopy(text) {
       showPairingError('Please enter a code');
       return;
     }
-    
     await joinWithCode(code);
   });
 }
+
+//  ဒီ function က setupPairingScreen အပြင်မှာ ရှိရပါမယ်
+function fallbackCopy(text) {
+  const textarea = document.createElement('textarea');
+  textarea.value = text;
+  textarea.style.position = 'fixed';
+  textarea.style.left = '-9999px';
+  document.body.appendChild(textarea);
+  textarea.select();
+
+  try {
+    document.execCommand('copy');
+    showToast('Code copied! ');
+  } catch (e) {
+    showPairingError('Failed to copy');
+  }
+
+  document.body.removeChild(textarea);
+  }
+
+
 
 async function generateInviteCode() {
   // Check if already has an unused code
