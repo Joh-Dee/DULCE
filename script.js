@@ -252,20 +252,30 @@ async function setupPairingScreen() {
   await generateInviteCode();
   
   // Share button
-  $('shareCodeBtn').addEventListener('click', () => {
-    const code = $('myInviteCode').textContent;
-    if (navigator.share) {
-      navigator.share({
-        title: 'DULCE Invite Code',
-        text: `Connect with me on DULCE! My code is: ${code}`,
-        url: window.location.href
-      });
-    } else {
-      // Fallback - copy to clipboard
-      navigator.clipboard.writeText(code);
-      alert('Code copied: ' + code);
-    }
+
+
+  // Copy button
+$('shareCodeBtn').addEventListener('click', () => {
+  const code = $('myInviteCode').textContent;
+  if (code === '----' || !code) return;
+  
+  navigator.clipboard.writeText(code).then(() => {
+    showToast('Code copied! ');
+  }).catch(() => {
+    showPairingError('Failed to copy');
   });
+});
+// toast
+  $('shareCodeBtn').addEventListener('click', () => {
+  const code = $('myInviteCode').textContent;
+  if (code === '----' || !code) return;
+  
+  navigator.clipboard.writeText(code).then(() => {
+    showToast('Code copied! ');
+  }).catch(() => {
+    showPairingError('Failed to copy');
+  });
+});
   
   // Join button
   $('joinCodeBtn').addEventListener('click', async () => {
