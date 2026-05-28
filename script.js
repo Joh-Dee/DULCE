@@ -299,21 +299,25 @@ function fallbackCopy(text) {
 
 
 async function generateInviteCode() {
-  // Check if already has an unused code
-  const { data: existing } = await db
+  console.log('Generating code for user:', currentUser.id);
+  
+  const { data: existing, error: existError } = await db
     .from('invite_codes')
     .select('*')
     .eq('created_by', currentUser.id)
     .eq('is_used', false)
     .maybeSingle();
   
+  console.log('Existing:', existing, 'Error:', existError);
+  
   if (existing) {
+    console.log('Found existing code:', existing.code);
     $('myInviteCode').textContent = existing.code;
     return;
   }
   
-  // Generate new code
   const code = 'DULCE-' + Math.random().toString(36).substring(2, 8).toUpperCase();
+  console.log('Generated new code:', code);
   
   const { error } = await db
     .from('invite_codes')
@@ -322,7 +326,11 @@ async function generateInviteCode() {
       created_by: currentUser.id
     });
   
-  if (!error) {
+  if (error) {
+    console.error('Insert error:', error.message, error.details);
+    showPairingError('Failed to generate code: ' + error.message);
+  } else {
+    console.log('Code saved!');
     $('myInviteCode').textContent = code;
   }
 }
