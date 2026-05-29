@@ -413,7 +413,7 @@ await db
     .from('profiles')
     .select('*')
     .eq('id', codeData.created_by)
-    .single();
+    .maybeSingle();
   
   partnerProfile = partner;
   
