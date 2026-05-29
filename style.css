@@ -336,6 +336,14 @@ body { position: relative; }
   object-fit: cover;
   margin-bottom: 8px;
 }
+.status-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 6px;
+  text-align: center;
+  letter-spacing: 0.3px;
+}
 
 .lottie {
   width: 110px;
