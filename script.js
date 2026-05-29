@@ -459,12 +459,15 @@ function showToast(text) {
 // ==========================================
 
 async function startApp() {
-  // Update avatars
-  $('myAvatar').src = userProfile.avatar;
-  $('partnerAvatar').src = partnerProfile.avatar;
+  // Determine who is who
+  const isBoy = userProfile.gender === 'boy';
   
-  // Update names (separate element)
+  // Set My Avatar & Name (always left side)
+  $('myAvatar').src = userProfile.avatar;
   $('myName').textContent = userProfile.display_name;
+  
+  // Set Partner Avatar & Name (always right side)
+  $('partnerAvatar').src = partnerProfile.avatar;
   $('partnerName').textContent = partnerProfile.display_name;
 
   buildStatusList();
@@ -477,7 +480,6 @@ async function startApp() {
   startTyping();
   setInterval(updateTimes, 1000);
 }
-
 
 // ==========================================
 //           BUILD STATUS LIST
