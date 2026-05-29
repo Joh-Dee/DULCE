@@ -459,6 +459,14 @@ function showToast(text) {
 // ==========================================
 
 async function startApp() {
+  // Update avatars and names based on user profile
+  $('myAvatar').src = userProfile.avatar;
+  $('partnerAvatar').src = partnerProfile.avatar;
+  
+  // Update status card labels (optional)
+  document.querySelector('.status-card.mine .status-label').textContent = userProfile.display_name;
+  document.querySelector('.status-card.partner .status-label').textContent = partnerProfile.display_name;
+
   buildStatusList();
   await loadStates();
   subscribeRealtime();
@@ -469,6 +477,7 @@ async function startApp() {
   startTyping();
   setInterval(updateTimes, 1000);
 }
+
 
 // ==========================================
 //           BUILD STATUS LIST
