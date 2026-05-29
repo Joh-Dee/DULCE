@@ -459,13 +459,6 @@ function showToast(text) {
 // ==========================================
 
 async function startApp() {
-
-
-  console.log('userProfile:', userProfile);
-  console.log('partnerProfile:', partnerProfile);
-  console.log('myName element:', $('myName'));
-  console.log('partnerName element:', $('partnerName'));
-  
   // Determine who is who
   const isBoy = userProfile.gender === 'boy';
   
@@ -922,3 +915,5 @@ function showBuzz() {
     $('buzzOverlay').classList.remove('active');
   }, 3000);
 }
+
+    console.log('Success');
