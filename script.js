@@ -617,19 +617,7 @@ function loadLottie(type, file) {
     partnerAnim = anim;
   }
 }
-//PARING REALTIME
-//================
-async function startApp() {
-  buildStatusList();
-  await loadStates();
-  subscribeRealtime();
-  subscribeBuzz();
-  subscribePairingRealtime();  //  ဒါထည့်
-  setupSheet();
-  setupFlutter();
-  startTyping();
-  setInterval(updateTimes, 1000);
-}
+
 
 
 // ==========================================
