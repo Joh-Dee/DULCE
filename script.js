@@ -459,10 +459,8 @@ function showToast(text) {
 // ==========================================
 
 async function startApp() {
-  console.log('userProfile:', userProfile);
-  console.log('partnerProfile:', partnerProfile);
-  console.log('myName element:', $('myName'));
-  console.log('partnerName element:', $('partnerName'));
+  console.log('userProfile:');
+  
   // Determine who is who
   const isBoy = userProfile.gender === 'boy';
   
