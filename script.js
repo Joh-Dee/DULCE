@@ -853,6 +853,25 @@ async function finishPress() {
 }
 
 // ==========================================
+//         PAIRING REALTIME
+// ==========================================
+
+function subscribePairingRealtime() {
+  db.channel('pairing-sync')
+    .on(
+      'postgres_changes',
+      { event: 'INSERT', schema: 'public', table: 'pairs' },
+      payload => {
+        const row = payload.new;
+        if (row.user1_id === currentUser.id || row.user2_id === currentUser.id) {
+          loadProfile();
+        }
+      }
+    )
+    .subscribe();
+    }
+
+// ==========================================
 //               BUZZ
 // ==========================================
 
