@@ -614,3 +614,34 @@ body { position: relative; }
   0% { transform: scale(0.5); opacity: 1; }
   100% { transform: scale(2); opacity: 0; }
   }
+
+
+/* ==================== SHEET (COMPACT GRID) ==================== */
+
+.sheet {
+  max-height: 75vh;
+  overflow-y: auto;
+  padding: 14px 14px 30px;
+}
+
+.sheet-handle {
+  margin: 0 auto 14px;
+}
+
+.sheet-title {
+  margin-bottom: 14px;
+  font-size: 15px;
+}
+
+.status-list {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.status-item {
+  padding: 12px 8px;
+  font-size: 13px;
+  border-radius: 14px;
+  line-height: 1.3;
+}
