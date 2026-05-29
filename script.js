@@ -23,14 +23,26 @@ const $ = id => document.getElementById(id);
 // ==========================================
 
 const STATUS = [
-  { id: 'free', label: 'Free', file: 'free.json' },
-  { id: 'teaching', label: 'Teaching', file: 'teaching.json' },
-  { id: 'busy', label: 'Busy', file: 'busy.json' },
-  { id: 'eating', label: 'Eating', file: 'eating.json' },
-  { id: 'tired', label: 'Tired', file: 'tired.json' },
-  { id: 'studying', label: 'Studying', file: 'studying.json' },
-  { id: 'sleeping', label: 'Sleeping', file: 'sleeping.json' },
-  { id: 'working', label: 'Working', file: 'working.json' }
+  { id: 'atHome', label: 'At Home', file: 'lottie/atHome.json' },
+  { id: 'busy', label: 'Busy Right Now', file: 'lottie/busy.json' },
+  { id: 'callMe', label: 'Call Me Maybe', file: 'lottie/callMe.json' },
+  { id: 'doNotDisturb', label: 'Do Not Disturb', file: 'lottie/doNotDisturb.json' },
+  { id: 'eating', label: 'Having a Meal', file: 'lottie/eating.json' },
+  { id: 'free', label: 'Feeling Free', file: 'lottie/free.json' },
+  { id: 'gaming', label: 'Gaming Time', file: 'lottie/gaming.json' },
+  { id: 'goingOutside', label: 'Going Outside', file: 'lottie/goingOutside.json' },
+  { id: 'happy', label: 'Feeling Happy', file: 'lottie/happy.json' },
+  { id: 'listeningMusic', label: 'Listening to Music', file: 'lottie/listeningMusic.json' },
+  { id: 'lowEnergy', label: 'Low Energy Mode', file: 'lottie/lowEnergy.json' },
+  { id: 'missYou', label: 'Missing You', file: 'lottie/missYou.json' },
+  { id: 'needHug', label: 'Need a Hug', file: 'lottie/needHug.json' },
+  { id: 'relaxed', label: 'Just Relaxing', file: 'lottie/relaxed.json' },
+  { id: 'sad', label: 'Feeling Sad', file: 'lottie/sad.json' },
+  { id: 'sleeping', label: 'Fast Asleep', file: 'lottie/sleeping.json' },
+  { id: 'teaching', label: 'Teaching Mode', file: 'lottie/teaching.json' },
+  { id: 'tired', label: 'Feeling Tired', file: 'lottie/tired.json' },
+  { id: 'watchingMovie', label: 'Movie Time', file: 'lottie/watchingMovie.json' },
+  { id: 'working', label: 'Working Hard', file: 'lottie/working.json' }
 ];
 
 // ==========================================
