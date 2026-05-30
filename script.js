@@ -508,10 +508,7 @@ function buildStatusList() {
     div.textContent = status.label;
 
     div.addEventListener('click', () => updateStatus(status));
-    div.addEventListener('touchend', (e) => {
-      e.preventDefault();
-      updateStatus(status);
-    });
+    
 
     $('statusList').appendChild(div);
   });
