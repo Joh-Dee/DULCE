@@ -96,8 +96,13 @@ body { position: relative; }
   0%, 100% { transform: scale(1); box-shadow: 0 0 50px rgba(245, 158, 11, 0.2); }
   50% { transform: scale(1.06); box-shadow: 0 0 70px rgba(245, 158, 11, 0.35); }
 }
-
-.auth-logo-icon { font-size: 36px; }
+.auth-logo-icon { 
+  font-size: 36px; 
+  line-height: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 
 .auth-title {
   font-size: 38px;
