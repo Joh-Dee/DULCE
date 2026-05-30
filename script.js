@@ -484,6 +484,16 @@ async function startApp() {
   $('partnerAvatar').src = partnerProfile.avatar;
   $('partnerName').textContent = partnerProfile.display_name;
 
+    // Update QUOTES with partner name
+  QUOTES.length = 0;
+  QUOTES.push(
+    'Two souls, one heartbeat.',
+    `No sugar needed when I have ${partnerProfile?.display_name || 'you'}.`,
+    'Miles apart, but always close at heart.',
+    `Just thinking about ${partnerProfile?.display_name || 'you'}... again.`,
+    'You are sweeter than honey.'
+  );
+
   buildStatusList();
   await loadStates();
   subscribeRealtime();
