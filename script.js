@@ -847,10 +847,24 @@ async function finishPress() {
   cancelAnimationFrame(raf);
   $('ringFill').style.strokeDashoffset = RING;
 
-  await db.from('buzz').insert({
-    sender_id: currentUser.id,
-    receiver_id: partnerProfile.id
-  });
+  // Partner ရဲ့ buzz_count +1
+  const { data: existing } = await db
+    .from('buzz_counter')
+    .select('buzz_count')
+    .eq('user_id', partnerProfile.id)
+    .maybeSingle();
+
+  const newCount = existing ? existing.buzz_count + 1 : 1;
+
+  await db
+    .from('buzz_counter')
+    .upsert({
+      user_id: partnerProfile.id,
+      buzz_count: newCount,
+      updated_at: new Date().toISOString()
+    }, {
+      onConflict: 'user_id'
+    });
 
   showToast('Miss you sent ');
 
@@ -864,7 +878,6 @@ async function finishPress() {
 
   showBuzz();
 }
-
 // ==========================================
 //         PAIRING REALTIME
 // ==========================================
@@ -892,9 +905,9 @@ function subscribeBuzz() {
   db.channel('buzz-sync')
     .on(
       'postgres_changes',
-      { event: 'INSERT', schema: 'public', table: 'buzz' },
+      { event: 'UPDATE', schema: 'public', table: 'buzz_counter' },
       payload => {
-        if (payload.new.receiver_id === currentUser.id) {
+        if (payload.new.user_id === currentUser.id) {
           showBuzz();
         }
       }
