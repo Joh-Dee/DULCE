@@ -749,41 +749,38 @@ function setupSheet() {
     }
   });
 
+  //  Swipe Down on Handle ONLY (not on scroll area)
   let startY = 0;
-  let endY = 0;
 
   $('sheetHandle').addEventListener('touchstart', (e) => {
     startY = e.touches[0].clientY;
   });
 
-  $('sheetHandle').addEventListener('touchmove', (e) => {
-    endY = e.touches[0].clientY;
-  });
-
-  $('sheetHandle').addEventListener('touchend', () => {
-    if (endY - startY > 80) {
+  $('sheetHandle').addEventListener('touchend', (e) => {
+    const endY = e.changedTouches[0].clientY;
+    if (endY - startY > 50) {
       closeSheet();
     }
     startY = 0;
-    endY = 0;
   });
+
   // Logout Button
-$('logoutBtn').addEventListener('click', () => {
-  $('logoutConfirm').classList.add('active');
-});
+  $('logoutBtn').addEventListener('click', () => {
+    $('logoutConfirm').classList.add('active');
+  });
 
-// Cancel Logout
-$('cancelLogout').addEventListener('click', () => {
-  $('logoutConfirm').classList.remove('active');
-});
+  // Cancel Logout
+  $('cancelLogout').addEventListener('click', () => {
+    $('logoutConfirm').classList.remove('active');
+  });
 
-// Confirm Logout
-$('confirmLogout').addEventListener('click', async () => {
-  await db.auth.signOut();
-  localStorage.clear();
-  location.reload();
-});
-}
+  // Confirm Logout
+  $('confirmLogout').addEventListener('click', async () => {
+    await db.auth.signOut();
+    localStorage.clear();
+    location.reload();
+  });
+        }
 
 function openSheet() {
   if ($('sheet').classList.contains('active')) return;
