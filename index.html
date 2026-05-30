@@ -188,12 +188,27 @@
 <div id="overlay" class="overlay"></div>
 
 <!-- ========== BOTTOM SHEET ========== -->
-<section id="sheet" class="sheet">
+  <section id="sheet" class="sheet">
   <div id="sheetHandle" class="sheet-handle"></div>
   <div class="sheet-title">Choose Status</div>
   <div id="statusList" class="status-list"></div>
-</section>
+  
+  <!-- Logout Button -->
+  <button id="logoutBtn" class="logout-btn">Logout</button>
+  </section>
 
+  <!-- ========== LOGOUT CONFIRM ========== -->
+<div id="logoutConfirm" class="confirm-overlay">
+  <div class="confirm-dialog">
+    <h3>Logout?</h3>
+    <p>Are you sure you want to logout?</p>
+    <div class="confirm-buttons">
+      <button id="cancelLogout" class="confirm-btn cancel">Cancel</button>
+      <button id="confirmLogout" class="confirm-btn logout">Logout</button>
+    </div>
+  </div>
+</div>
+  
 <!-- ========== TOAST ========== -->
 <div id="toast" class="toast"></div>
 
