@@ -767,6 +767,22 @@ function setupSheet() {
     startY = 0;
     endY = 0;
   });
+  // Logout Button
+$('logoutBtn').addEventListener('click', () => {
+  $('logoutConfirm').classList.add('active');
+});
+
+// Cancel Logout
+$('cancelLogout').addEventListener('click', () => {
+  $('logoutConfirm').classList.remove('active');
+});
+
+// Confirm Logout
+$('confirmLogout').addEventListener('click', async () => {
+  await db.auth.signOut();
+  localStorage.clear();
+  location.reload();
+});
 }
 
 function openSheet() {
