@@ -18,12 +18,13 @@
 
 html, body {
   width: 100%;
-  min-height: 100vh;
-  overflow-x: hidden;
-  overflow-y: auto;
+  height: 100%;
+  overflow: hidden;
   background: var(--bg);
   color: var(--text);
   font-family: var(--font);
+  user-select: none;
+  -webkit-user-select: none;
 }
 body { position: relative; }
 
@@ -32,13 +33,13 @@ body { position: relative; }
 /* ==================== AUTH PAGES ==================== */
 .auth-page {
   width: 100%;
-  min-height: 100vh;
+  height: 100%;
   display: flex;
   justify-content: center;
-  align-items: flex-start;
-  padding: 20px 16px;
+  align-items: center;
+  padding: 24px;
   position: relative;
-  overflow-y: auto;
+  overflow: hidden;
 }
 
 /* Animated Background Orbs */
@@ -72,11 +73,9 @@ body { position: relative; }
 .auth-wrap {
   width: 100%;
   max-width: 380px;
-  margin: auto;
   text-align: center;
   position: relative;
   z-index: 1;
-  padding: 20px 0 40px;
 }
 
 /* Logo */
@@ -186,7 +185,7 @@ body { position: relative; }
 /* Avatar Grid */
 .avatar-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: 1fr 1fr;
   gap: 10px;
 }
 
